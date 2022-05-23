@@ -2,7 +2,7 @@
 kmong-proejct
 
 ### project 환경
-spring boot: 2.6.0
+spring boot: 2.6.0  
 java: open-jdk-11  
 db: h2 in memory  
 memory_db: redis(docker)  
