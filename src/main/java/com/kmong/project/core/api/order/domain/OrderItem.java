@@ -35,7 +35,7 @@ public class OrderItem extends BaseEntity{
 	@Column(name="ORDR_PRC")
 	private int price;
 	
-	@Column(name="QUANTITY")
+	@Column(name="ORDR_QTY")
 	private int quantity;
 	
 	public OrderItem(Long productId, Order order, int price, int quantity) {

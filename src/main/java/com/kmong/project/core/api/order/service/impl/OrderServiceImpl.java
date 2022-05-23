@@ -24,13 +24,12 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	@Transactional
 	public OrderResponse orderProcess(OrderRequest orderRequest) {
-		
 		/*
-		 * 주문서와, 상품의 데이터 정합성 검사를 해야함
-		 * 과제라서 해당 부분은 pass...
-		 * 프로젝트 시작시 랜덤으로 상품등록
+		 * 상품데이터 정합성 검사...
+		 * 재고차감...
 		 */
-		
+
+		//주문서 생성
 		Order order = Order.from(orderRequest);
 		order.setMember(memberService.findByMemberFromSecurity());
 		if(order.getMember() == null) {
@@ -38,6 +37,9 @@ public class OrderServiceImpl implements OrderService {
 		}
 		order = orderRepository.save(order);	//주문서 저장
 		
+		/*
+		 * 결제 Process...
+		 */
 		return OrderResponse.of(order.getOrderNumber(), order.getOrderAmount());
 	}
 }
