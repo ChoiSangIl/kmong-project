@@ -1,5 +1,6 @@
 package com.kmong.project.core.api.auth.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,6 +21,7 @@ import lombok.NoArgsConstructor;
 public class Member extends BaseEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "MEMBER_ID")
 	private Long id;
 
 	@Embedded

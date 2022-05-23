@@ -21,18 +21,18 @@ import lombok.NoArgsConstructor;
 public class OrderItem extends BaseEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ORDER_PRODUCT_ID")
+	@Column(name = "ORDR_PROD_ID")
 	private Long orderItemId;
 	
 	@ManyToOne
-	@JoinColumn(name = "ORDER_NUMBER")
+	@JoinColumn(name = "ORDR_NUM")
 	@JsonBackReference
 	Order order;
 	
-	@Column(name="PRODUCT_ID")
+	@Column(name="PROD_ID")
 	private Long productId;
 	
-	@Column(name="PRICE")
+	@Column(name="ORDR_PRC")
 	private int price;
 	
 	@Column(name="QUANTITY")

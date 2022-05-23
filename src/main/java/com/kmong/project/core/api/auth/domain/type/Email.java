@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Email {
-	@Column(name="email", unique = true)
+	@Column(name="EMAIL", unique = true)
 	private String value;
 	
 	public Email(String email){

@@ -36,10 +36,10 @@ import lombok.ToString;
 public class Order extends BaseEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ORDER_NUMBER")
+	@Column(name = "ORDR_NUM")
 	private Long orderNumber;
 	
-	@Column(name = "ORDER_AMOUNT", nullable = false)
+	@Column(name = "ORDR_AMT", nullable = false)
 	private int orderAmount;
 	
 	@Enumerated(EnumType.STRING)
@@ -51,7 +51,7 @@ public class Order extends BaseEntity{
 	List<OrderItem> orderProductList = new ArrayList<OrderItem>();;
 	
 	@OneToOne
-	@JoinColumn(name = "MEMBER_ID")
+	@JoinColumn(name = "MEM_ID")
 	@Cascade(CascadeType.PERSIST)
 	private Member member;
 	
