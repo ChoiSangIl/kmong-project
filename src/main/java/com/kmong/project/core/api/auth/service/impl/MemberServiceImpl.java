@@ -10,6 +10,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
-public class MemberServiceImpl implements MemberService {
+public class MemberServiceImpl implements MemberService, UserDetailsService {
 
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
@@ -78,6 +80,25 @@ public class MemberServiceImpl implements MemberService {
 		String username = userDetails.getUsername();
 		System.out.println(username);
 		return memberRepository.findByEmail(new Email(username));
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		final Member member = memberRepository.findByEmail(new Email(username));
+
+		if (member == null) {
+			throw new UsernameNotFoundException("User '" + username + "' not found");
+		}
+
+		return org.springframework.security.core.userdetails.User//
+				.withUsername(username)//
+				.password(member.getPassword().getValue())//
+				.authorities("USER")//
+				.accountExpired(false)//
+				.accountLocked(false)//
+				.credentialsExpired(false)//
+				.disabled(false)//
+				.build();
 	}
 
 }

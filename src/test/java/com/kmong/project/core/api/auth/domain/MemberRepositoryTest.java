@@ -31,7 +31,6 @@ public class MemberRepositoryTest {
 	
 	@Test
 	@DisplayName("회원 저장 및 검색")
-	@Transactional
 	public void saveMemberSuccess() {
 		//when
 		Member savedMember = memberRepository.save(new Member(email, password));
@@ -49,7 +48,6 @@ public class MemberRepositoryTest {
 		
 		//then
 		assertAll(
-			()->assertEquals(member.getId(), 1L),
 			()->assertEquals(member.getEmail().getValue(), email),
 			()->assertEquals(member.getPassword().getValue(), password)
 		);
@@ -57,7 +55,6 @@ public class MemberRepositoryTest {
 	
 	@Test
 	@DisplayName("회원이 존재하는지 체크한다")
-	@Transactional
 	public void checkExistsMemeber() {
 		//when
 		Boolean check = memberRepository.existsByEmail(new Email(email));

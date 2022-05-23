@@ -3,6 +3,7 @@ package com.kmong.project.core.api.auth;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -95,6 +96,21 @@ public class AuthControllerTest {
 		.andExpect(jsonPath("id").value(1L))
 		.andExpect(jsonPath("email.value").value(email.getValue()))
 		.andExpect(jsonPath("jwtToken").value(jwtToken));
+	}
+	
+	@Test
+	@DisplayName("로그아웃 컨트롤러 테스트")
+	@WithMockUser
+	public void testLogout() throws JsonProcessingException, Exception {
+		//when
+		mockMvc.perform(
+				get("/api/v1/auth/logout")
+				.contentType(MediaType.APPLICATION_JSON)
+				.with(csrf())
+		)
+		
+		//then
+		.andExpect(status().isOk());
 	}
 
 }

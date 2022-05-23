@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import com.kmong.project.common.exception.InvalidJwtTokenException;
@@ -24,11 +25,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JwtTokenProvider {
 
-	/**
-	 * THIS IS NOT A SECURE PRACTICE! For simplicity, we are storing a static key
-	 * here. Ideally, in a microservices environment, this key would be kept on a
-	 * config-server.
-	 */
 	@Value("${security.jwt.token.secret-key:secret-key}")
 	private String secretKey;
 
@@ -36,7 +32,7 @@ public class JwtTokenProvider {
 	private long validityInMilliseconds = 3600000; // 1h
 
 	@Autowired
-	private MyUserDetails myUserDetails;
+	private UserDetailsService userDetailService;
 
 	@PostConstruct
 	protected void init() {
@@ -60,7 +56,7 @@ public class JwtTokenProvider {
 	}
 
 	public Authentication getAuthentication(String token) {
-		UserDetails userDetails = myUserDetails.loadUserByUsername(getUsername(token));
+		UserDetails userDetails = userDetailService.loadUserByUsername(getUsername(token));
 		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
 	}
 
