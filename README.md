@@ -27,6 +27,12 @@ mvnw spring-boot:run
 ## 방법3.
 http://sang12.iptime.org:9000/swagger-ui/index.html
 ```
-
 ### api-docs
 http://localhost:9000/swagger-ui/index.html
+
+### h2(in memory db)
+http://localhost:9000/h2-console   
+Driver Class:org.h2.Driver  
+JDBC URL:jdbc:h2:mem:kmong  
+User Name:sa  
+Password:  
