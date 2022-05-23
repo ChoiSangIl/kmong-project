@@ -11,15 +11,21 @@ api-docs: swagger3.0
 
 ### porject 시작
 ```
+git clone https://github.com/ChoiSangIl/kmong-project.git
+chmod +x mvnw (리눅스 permission denied가 날경우)
+
+## 방법1.
 mvnw clean package
 docker-compose build --no-cache
 docker-compose up -d
 
-or
-
+## 방법2.
 docker run -d -p 6379:6379 --name kmong_redis redis:latest
 mvnw clean install -U
 mvnw spring-boot:run
+
+## 방법3.
+http://sang12.iptime.org:9000/swagger-ui/index.html
 ```
 
 ### api-docs
