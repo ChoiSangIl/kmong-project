@@ -17,7 +17,7 @@ docker-compose up -d
 
 or
 
-docker run -d redis:latest --name kmong_redis -p 6379:6379
+docker run -d -p 6379:6379 --name kmong_redis redis:latest
 mvnw clean install -U
 mvnw spring-boot:run
 ```
