@@ -3,8 +3,10 @@ package com.kmong.project.core.api.auth.service;
 import com.kmong.project.core.api.auth.domain.Member;
 import com.kmong.project.core.api.auth.dto.request.MemberCreateRequest;
 import com.kmong.project.core.api.auth.dto.request.MemberLoginRequest;
+import com.kmong.project.core.api.auth.dto.request.MemberLogoutRequest;
 import com.kmong.project.core.api.auth.dto.response.MemberCreateResponse;
 import com.kmong.project.core.api.auth.dto.response.MemberLoginResponse;
+import com.kmong.project.core.api.auth.dto.response.MemberLogoutResponse;
 
 public interface MemberService {	
 	/**
@@ -26,4 +28,10 @@ public interface MemberService {
 	 * @return
 	 */
 	public Member findByMemberFromSecurity();
+	
+	/**
+	 * 로그아웃
+	 * @return
+	 */
+	public MemberLogoutResponse logout(MemberLogoutRequest memberLogoutRequest);
 }

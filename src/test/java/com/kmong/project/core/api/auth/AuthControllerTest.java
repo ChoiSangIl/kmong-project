@@ -3,7 +3,6 @@ package com.kmong.project.core.api.auth;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,8 +25,10 @@ import com.kmong.project.core.api.auth.domain.type.Email;
 import com.kmong.project.core.api.auth.domain.type.Password;
 import com.kmong.project.core.api.auth.dto.request.MemberCreateRequest;
 import com.kmong.project.core.api.auth.dto.request.MemberLoginRequest;
+import com.kmong.project.core.api.auth.dto.request.MemberLogoutRequest;
 import com.kmong.project.core.api.auth.dto.response.MemberCreateResponse;
 import com.kmong.project.core.api.auth.dto.response.MemberLoginResponse;
+import com.kmong.project.core.api.auth.dto.response.MemberLogoutResponse;
 import com.kmong.project.core.api.auth.service.MemberService;
 
 @WebMvcTest(controllers = AuthController.class, 
@@ -49,7 +50,7 @@ public class AuthControllerTest {
 	
 
 	@Test
-	@DisplayName("회원가입 컨트롤러 테스트")
+	@DisplayName("회원가입 api 호출 테스트")
 	@WithMockUser
 	public void testJoin() throws JsonProcessingException, Exception {
 		//given
@@ -74,7 +75,7 @@ public class AuthControllerTest {
 	}
 	
 	@Test
-	@DisplayName("로그인 컨트롤러 테스트")
+	@DisplayName("로그인 api 호출 테스트")
 	@WithMockUser
 	public void testLogin() throws JsonProcessingException, Exception {
 		//given
@@ -99,13 +100,21 @@ public class AuthControllerTest {
 	}
 	
 	@Test
-	@DisplayName("로그아웃 컨트롤러 테스트")
+	@DisplayName("로그아웃 api 호출 테스트")
 	@WithMockUser
 	public void testLogout() throws JsonProcessingException, Exception {
+		MemberLogoutRequest memberLogoutRequest = new MemberLogoutRequest();
+		memberLogoutRequest.setAccessToken("testToken");
+		
+		MemberLogoutResponse response = new MemberLogoutResponse("logout 하였습니다.");
+		
+		doReturn(response).when(memberService).logout(any());
+		
 		//when
 		mockMvc.perform(
-				get("/api/v1/auth/logout")
+				post("/api/v1/auth/logout")
 				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(memberLogoutRequest))
 				.with(csrf())
 		)
 		

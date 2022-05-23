@@ -10,6 +10,7 @@ import static org.mockito.Mockito.mock;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -34,7 +35,8 @@ public class MemberServiceImplTest {
 	private final JwtTokenProvider jwtTokenProvider = mock(JwtTokenProvider.class);
 	private final PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
 	private final AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
-    private final MemberService memberService = new MemberServiceImpl(memberRepository, passwordEncoder, jwtTokenProvider, authenticationManager);
+	private final RedisTemplate<String, String> redisTemplate = mock(RedisTemplate.class);
+    private final MemberService memberService = new MemberServiceImpl(memberRepository, passwordEncoder, jwtTokenProvider, authenticationManager, redisTemplate);
 
 	@Test
 	@DisplayName("회원을 등록한다")
@@ -92,5 +94,10 @@ public class MemberServiceImplTest {
 			()->assertEquals(memberLoginResponse.getId(), member.getId()),
 			()->assertEquals(memberLoginResponse.getJwtToken(), jwtToken)
 		);
+	}
+
+	@Test
+	@DisplayName("로그아웃을 할 수 있다.")
+	public void testLogout() {
 	}
 }

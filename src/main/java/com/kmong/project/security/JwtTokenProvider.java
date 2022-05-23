@@ -8,12 +8,14 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import com.kmong.project.common.exception.InvalidJwtTokenException;
 
@@ -21,6 +23,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.AllArgsConstructor;
 
 @Component
 public class JwtTokenProvider {
@@ -33,6 +36,9 @@ public class JwtTokenProvider {
 
 	@Autowired
 	private UserDetailsService userDetailService;
+	
+	@Autowired
+	private  RedisTemplate<String, String> redisTemplate;
 
 	@PostConstruct
 	protected void init() {
@@ -75,10 +81,25 @@ public class JwtTokenProvider {
 	public boolean validateToken(String token) {
 		try {
 			Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-			return true;
+			String isLogout = (String) redisTemplate.opsForValue().get(token);
+			System.out.println(token);
+			System.out.println("@@@@@@@@@@@@@"+isLogout);
+			if (ObjectUtils.isEmpty(isLogout)) {
+				return true;
+			}else {
+				throw new JwtException(isLogout);
+			}
 		} catch (JwtException | IllegalArgumentException e) {
 			throw new InvalidJwtTokenException("Expired or invalid JWT token", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	public Long getExpiration(String accessToken) {
+		// accessToken 남은 유효시간
+		Date expiration = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(accessToken).getBody().getExpiration();
+		// 현재 시간
+		Long now = new Date().getTime();
+		return (expiration.getTime() - now);
 	}
 
 }

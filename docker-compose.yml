@@ -1,9 +1,15 @@
 version : "3"
 services:
-    app-1:
-        container_name: kmong-proejct
+    app:
         build: .
+        container_name: kmong_app
         environment:
-            PORT : 8080
+            PORT : 9000
         ports:
-            - "8080:8080"
+            - "9000:9000"
+    db:
+        image: redis:latest
+        container_name: kmong_redis
+        ports:
+            - "6379:6379"
+      
