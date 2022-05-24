@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kmong.project.core.api.order.dto.request.OrderCreateRequest;
 import com.kmong.project.core.api.order.dto.request.OrderListRequest;
-import com.kmong.project.core.api.order.dto.response.OrderResponse;
+import com.kmong.project.core.api.order.dto.response.OrderListResponse;
+import com.kmong.project.core.api.order.dto.response.OrderCreateResponse;
 import com.kmong.project.core.api.order.service.OrderService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,14 +30,14 @@ public class OrderController {
 
 	@PostMapping("/api/v1/order")
 	@Operation(summary = "상품 주문", description = "product Id 5번까지 테스트 상품 자동 등록")
-	public OrderResponse order(@RequestBody @Validated OrderCreateRequest orderRequest) {
+	public OrderCreateResponse order(@RequestBody @Validated OrderCreateRequest orderRequest) {
 		return orderService.orderProcess(orderRequest);
 	}
 	
 	@GetMapping("/api/v1/me/order")
 	@Operation(summary = "회원 주문 내역 조회")
-	public String getMyOrders(OrderListRequest request) {
-		return "test...";
+	public OrderListResponse getMyOrders(OrderListRequest request) {
+		return orderService.getMyOrderList(request);
 	}
 
 }

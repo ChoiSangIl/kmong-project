@@ -1,15 +1,20 @@
 package com.kmong.project.core.api.order.service.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kmong.project.common.exception.BizRuntimeException;
 import com.kmong.project.common.exception.ErrorCode;
+import com.kmong.project.core.api.auth.domain.Member;
 import com.kmong.project.core.api.auth.service.MemberService;
 import com.kmong.project.core.api.order.domain.Order;
 import com.kmong.project.core.api.order.domain.OrderRepository;
 import com.kmong.project.core.api.order.dto.request.OrderCreateRequest;
-import com.kmong.project.core.api.order.dto.response.OrderResponse;
+import com.kmong.project.core.api.order.dto.request.OrderListRequest;
+import com.kmong.project.core.api.order.dto.response.OrderCreateResponse;
+import com.kmong.project.core.api.order.dto.response.OrderListResponse;
 import com.kmong.project.core.api.order.service.OrderService;
 import com.kmong.project.core.api.product.domain.ProductRepository;
 
@@ -25,7 +30,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	@Transactional
-	public OrderResponse orderProcess(OrderCreateRequest orderRequest) {
+	public OrderCreateResponse orderProcess(OrderCreateRequest orderRequest) {
 		Order order = Order.from(orderRequest);
 		order.setMember(memberService.findByMemberFromSecurity());
 		order.getOrderItems().forEach(orderItem->{
@@ -35,6 +40,13 @@ public class OrderServiceImpl implements OrderService {
 			}
 		});
 		order = orderRepository.save(order);
-		return OrderResponse.of(order.getOrderNumber(), order.getOrderAmount(), order.getPaymentAmount());
+		return OrderCreateResponse.of(order.getOrderNumber(), order.getOrderAmount(), order.getPaymentAmount());
+	}
+
+	@Override
+	public OrderListResponse getMyOrderList(OrderListRequest request) {
+		Member member = memberService.findByMemberFromSecurity();
+		List<Order> orders = orderRepository.findByMember(member);
+		return new OrderListResponse(orders);
 	}
 }

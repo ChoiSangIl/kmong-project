@@ -22,9 +22,11 @@ import com.kmong.project.core.api.auth.domain.type.Password;
 import com.kmong.project.core.api.auth.service.MemberService;
 import com.kmong.project.core.api.order.domain.Order;
 import com.kmong.project.core.api.order.domain.OrderRepository;
-import com.kmong.project.core.api.order.dto.request.OrderProductDto;
 import com.kmong.project.core.api.order.dto.request.OrderCreateRequest;
-import com.kmong.project.core.api.order.dto.response.OrderResponse;
+import com.kmong.project.core.api.order.dto.request.OrderListRequest;
+import com.kmong.project.core.api.order.dto.request.OrderProductDto;
+import com.kmong.project.core.api.order.dto.response.OrderCreateResponse;
+import com.kmong.project.core.api.order.dto.response.OrderListResponse;
 import com.kmong.project.core.api.order.dto.type.Bank;
 import com.kmong.project.core.api.order.dto.type.PaymentType;
 import com.kmong.project.core.api.order.service.OrderService;
@@ -78,7 +80,7 @@ public class OrderServiceImplTest {
 		doReturn(true).when(productRepository).existsById(any());
 		
 		//when
-		OrderResponse response = orderService.orderProcess(orderRequest);
+		OrderCreateResponse response = orderService.orderProcess(orderRequest);
 		
 		//then
 		assertAll(
@@ -129,5 +131,27 @@ public class OrderServiceImplTest {
 		Assertions.assertThrows(BizRuntimeException.class, () -> {
 			Order.from(orderRequest);
 	    });
+	}
+
+	@Test
+	@DisplayName("주문서 가져오기 서비스 테스트")
+	public void testGetMyOrderList() {
+		//given
+		Order order = Order.from(orderRequest);
+		List<Order> orders = new ArrayList<Order>();
+		orders.add(order);
+		Member member = new Member(1L, email.getValue(), password.getValue());
+		OrderListRequest request = new OrderListRequest();
+
+		doReturn(member).when(memberService).findByMemberFromSecurity();
+		doReturn(orders).when(orderRepository).findByMember(any());
+		
+		//when
+		OrderListResponse response = orderService.getMyOrderList(request);
+		
+		//then
+		assertAll(
+			()->assertEquals(response.getTotalOrderAmount(), order.getOrderAmount())
+		);
 	}
 }

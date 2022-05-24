@@ -2,6 +2,10 @@ package com.kmong.project.core.api.order.domain;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.List;
+
+import javax.transaction.Transactional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import com.kmong.project.common.exception.BizRuntimeException;
 import com.kmong.project.common.exception.ErrorCode;
 import com.kmong.project.core.api.auth.domain.Member;
+import com.kmong.project.core.api.auth.domain.MemberRepository;
 import com.kmong.project.core.api.auth.domain.type.Email;
 import com.kmong.project.core.api.auth.domain.type.Password;
 import com.kmong.project.core.api.order.domain.type.OrderStatus;
@@ -24,6 +29,9 @@ public class OrderRepositoryTest  {
 	
 	@Autowired
 	ProductRepository productRepository;
+	
+	@Autowired
+	MemberRepository memberRepository;
 	
 	private Order order;
 	private OrderItem orderItem;
@@ -42,6 +50,7 @@ public class OrderRepositoryTest  {
 	
 	@Test
 	@DisplayName("order entity 영속성 전이 Test")
+	@Transactional
 	public void orderSaveTest() {
 		//when
 		productRepository.save(orderItem.getProduct());
@@ -63,5 +72,24 @@ public class OrderRepositoryTest  {
 		assertNotNull(orderItem.getOrderItemId());
 		assertNotNull(order.getMember());
 	}
+	
+
+	@Test
+	@DisplayName("회원정보로 주문 정보를 찾을 수 있다.")
+	@Transactional
+	public void testFindByMember() {
+		//given
+		Member member = new Member(email.getValue(), password.getValue());
+		memberRepository.save(member);
+		Order order = new Order((int)(Math.random()*10000), OrderStatus.PAYMENT_COMPLETE);
+		orderRepository.save(order);
 		
+		//when
+		List<Order> orders = orderRepository.findByMember(member);
+		
+		//then
+		assertNotNull(orders);
+	}
+		
+
 }

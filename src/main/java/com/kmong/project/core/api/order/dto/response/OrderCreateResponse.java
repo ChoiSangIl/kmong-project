@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-public class OrderResponse {
+public class OrderCreateResponse {
 
 	@Schema(description = "주문번호")
 	private Long orderNumber;
@@ -15,13 +15,13 @@ public class OrderResponse {
 	@Schema(description = "결제금액")
 	private int paymentAmount;
 	
-	private OrderResponse(Long orderNumber, int orderAmount, int paymentAmount) {
+	private OrderCreateResponse(Long orderNumber, int orderAmount, int paymentAmount) {
 		this.orderNumber = orderNumber;
 		this.orderAmount = orderAmount;
 		this.paymentAmount = paymentAmount;
 	}
 	
-	public static OrderResponse of(Long orderNumber1, int orderAmount2, int paymentAmount3) {
-		return new OrderResponse(orderNumber1, orderAmount2, paymentAmount3);
+	public static OrderCreateResponse of(Long orderNumber1, int orderAmount2, int paymentAmount3) {
+		return new OrderCreateResponse(orderNumber1, orderAmount2, paymentAmount3);
 	}
 }

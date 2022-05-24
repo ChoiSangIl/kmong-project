@@ -29,10 +29,11 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kmong.project.core.api.order.dto.request.OrderListRequest;
 import com.kmong.project.core.api.order.dto.request.OrderCreateRequest;
+import com.kmong.project.core.api.order.dto.request.OrderListRequest;
 import com.kmong.project.core.api.order.dto.request.OrderProductDto;
-import com.kmong.project.core.api.order.dto.response.OrderResponse;
+import com.kmong.project.core.api.order.dto.response.OrderCreateResponse;
+import com.kmong.project.core.api.order.dto.response.OrderListResponse;
 import com.kmong.project.core.api.order.dto.type.Bank;
 import com.kmong.project.core.api.order.dto.type.PaymentType;
 import com.kmong.project.core.api.order.service.OrderService;
@@ -54,7 +55,7 @@ public class OrderControllerTest {
 	private final ObjectMapper objectMapper = new ObjectMapper();
 	
 	private OrderCreateRequest orderRequest;
-	private OrderResponse orderResponse;
+	private OrderCreateResponse orderResponse;
 	private OrderProductDto orderProductDto;
 	
 	@BeforeEach
@@ -68,7 +69,7 @@ public class OrderControllerTest {
 	
 	public void createOrderRequestDumyData(){
 		orderRequest = new OrderCreateRequest();
-		orderResponse = OrderResponse.of(1L, 1, 1000);
+		orderResponse = OrderCreateResponse.of(1L, 1, 1000);
 		orderProductDto = new OrderProductDto();
 		List<OrderProductDto> orderProducts = new ArrayList<OrderProductDto>();
 		orderProductDto.setProductId(1L);
