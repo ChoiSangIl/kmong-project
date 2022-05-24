@@ -20,9 +20,12 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import com.kmong.project.common.domain.BaseEntity;
+import com.kmong.project.common.exception.BizRuntimeException;
+import com.kmong.project.common.exception.ErrorCode;
 import com.kmong.project.core.api.auth.domain.Member;
 import com.kmong.project.core.api.order.domain.type.OrderStatus;
-import com.kmong.project.core.api.order.dto.request.OrderRequest;
+import com.kmong.project.core.api.order.dto.request.OrderCreateRequest;
+import com.kmong.project.core.api.product.domain.Product;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -42,13 +45,16 @@ public class Order extends BaseEntity{
 	@Column(name = "ORDR_AMT", nullable = false)
 	private int orderAmount;
 	
+	@Column(name = "PAY_AMT", nullable = false)
+	private int paymentAmount;
+	
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private OrderStatus status;
 	
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
 	@Cascade(CascadeType.PERSIST)
-	List<OrderItem> orderProductList = new ArrayList<OrderItem>();;
+	List<OrderItem> orderItems = new ArrayList<OrderItem>();;
 	
 	@OneToOne
 	@JoinColumn(name = "MEM_ID")
@@ -63,17 +69,27 @@ public class Order extends BaseEntity{
 		this.status = status;
 	}
 	
-	private Order(OrderRequest orderRequest) {
-		this.orderAmount = orderRequest.getPaymentAmount();
+	private Order(OrderCreateRequest orderRequest) {
 		this.status = OrderStatus.PAYMENT_READY;
+		
 		orderRequest.getProducts().forEach((obj)->{
-			OrderItem product = new OrderItem(obj.getProductId(), this, obj.getUnitPrice(), obj.getQuantity());
-			this.addProduct(product);
+			Product product = Product.builder().productId(obj.getProductId()).build();
+			OrderItem orderItem = new OrderItem(product, this, obj.getUnitPrice(), obj.getQuantity());
+			this.addOrderItem(orderItem);
+			this.orderAmount = this.orderAmount + orderItem.getPrice();
 		});
+		
+		//front에서 들어온 주문상품의 금액이 다를 경우 오류 처리
+		if(this.orderAmount != orderRequest.getOrderAmount()) {
+			throw new BizRuntimeException(ErrorCode.INVALID_ORDER_AMOUNT);
+		}
+		
+		//결제금액
+		this.paymentAmount = orderRequest.getPaymentAmount();
 	}
 	
-	public void addProduct(OrderItem product) {
-		orderProductList.add(product);
+	public void addOrderItem(OrderItem product) {
+		orderItems.add(product);
 		product.setOrder(this);
 	}
 	
@@ -81,7 +97,7 @@ public class Order extends BaseEntity{
 		this.member = member;
 	}
 	
-	public static Order from(OrderRequest orderRequest) {
+	public static Order from(OrderCreateRequest orderRequest) {
 		return new Order(orderRequest);
 	}
 	

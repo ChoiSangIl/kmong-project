@@ -71,8 +71,9 @@ public class MemberServiceImpl implements MemberService {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		UserDetails userDetails = (UserDetails) principal;
 		String username = userDetails.getUsername();
-		System.out.println(username);
-		return memberRepository.findByEmail(new Email(username));
+		Member member = memberRepository.findByEmail(new Email(username));
+		if(member == null) throw new BizRuntimeException(ErrorCode.AUTH_INVALID);
+		return member;
 	}
 
 	@Override

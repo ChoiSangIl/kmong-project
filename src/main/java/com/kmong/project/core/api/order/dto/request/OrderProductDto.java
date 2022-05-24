@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class OrderProductDto {
 	
-	@Schema(description = "주문 상품 리스트", example = "1")
+	@Schema(description = "상품 번호", example = "1")
     @NotNull(message="상품 id가 존재하지 않습니다.")
 	private Long productId;
 	

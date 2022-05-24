@@ -5,14 +5,12 @@ import static org.mockito.Mockito.doReturn;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,8 +29,9 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kmong.project.core.api.order.dto.request.OrderListRequest;
+import com.kmong.project.core.api.order.dto.request.OrderCreateRequest;
 import com.kmong.project.core.api.order.dto.request.OrderProductDto;
-import com.kmong.project.core.api.order.dto.request.OrderRequest;
 import com.kmong.project.core.api.order.dto.response.OrderResponse;
 import com.kmong.project.core.api.order.dto.type.Bank;
 import com.kmong.project.core.api.order.dto.type.PaymentType;
@@ -54,7 +53,7 @@ public class OrderControllerTest {
 	
 	private final ObjectMapper objectMapper = new ObjectMapper();
 	
-	private OrderRequest orderRequest;
+	private OrderCreateRequest orderRequest;
 	private OrderResponse orderResponse;
 	private OrderProductDto orderProductDto;
 	
@@ -62,15 +61,14 @@ public class OrderControllerTest {
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx)
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))  // 필터 추가
-                .alwaysDo(print())
                 .build();
         
         createOrderRequestDumyData();
     }
 	
 	public void createOrderRequestDumyData(){
-		orderRequest = new OrderRequest();
-		orderResponse = OrderResponse.of(1L, 1);
+		orderRequest = new OrderCreateRequest();
+		orderResponse = OrderResponse.of(1L, 1, 1000);
 		orderProductDto = new OrderProductDto();
 		List<OrderProductDto> orderProducts = new ArrayList<OrderProductDto>();
 		orderProductDto.setProductId(1L);
@@ -82,7 +80,7 @@ public class OrderControllerTest {
 		orderRequest.setPaymentType(PaymentType.CARD);
 		orderRequest.setCardNumber("xxxx-xxxx-xxxx-xxx");
 		orderRequest.setProducts(orderProducts);
-		orderRequest.setPaymentAmount(10000);
+		orderRequest.setOrderAmount(10000);
 		orderResponse.setOrderNumber(1L);
 	}
 
@@ -114,7 +112,7 @@ public class OrderControllerTest {
 		doReturn(orderResponse).when(orderService).orderProcess(any());
 		
 		orderRequest.setPaymentType(null);
-		orderRequest.setPaymentAmount(0);
+		orderRequest.setOrderAmount(0);
 		
 		//when
 		mockMvc.perform(
@@ -131,15 +129,20 @@ public class OrderControllerTest {
 	@Test
 	@DisplayName("주문서 리스트 조회 API를 호출 할 수 있다.")
 	@WithMockUser
-	public void testGetOrder() throws JsonProcessingException, Exception {
+	public void testGetMyOrder() throws JsonProcessingException, Exception {
+		
+		OrderListRequest request = new OrderListRequest();
+		
 		//when
 		mockMvc.perform(
-				get("/api/v1/order")
+				get("/api/v1/me/order")
 				.contentType(MediaType.APPLICATION_JSON)
+		        .with(csrf())
 		)
 		
 		//then
 		.andExpect(status().isOk());
 	}
+
 
 }

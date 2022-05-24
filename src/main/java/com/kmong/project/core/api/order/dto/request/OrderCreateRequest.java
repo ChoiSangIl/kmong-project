@@ -19,7 +19,7 @@ import lombok.Data;
  *
  */
 @Data
-public class OrderRequest {
+public class OrderCreateRequest {
 	@Schema(description = "주문 상품 리스트")
     @NotNull(message="상품은 필수 값 입니다.")
 	@Valid
@@ -35,7 +35,11 @@ public class OrderRequest {
 	@Schema(description = "카드번호", example = "1234-xxxx-xxxx-345")
 	private String cardNumber;
 	
-	@Schema(description = "결제금액", example = "10000")
+	@Schema(description = "주문금액", example = "10000")
 	@Min(1)
-	private int paymentAmount;
+	private int orderAmount;
+	
+	@Schema(description = "결제금액", example = "10000")
+	@Min(0)
+	private int paymentAmount;	//쿠폰이나 기타 이벤트에 따라 결제는 0원으로 될 수도 있다.
 }

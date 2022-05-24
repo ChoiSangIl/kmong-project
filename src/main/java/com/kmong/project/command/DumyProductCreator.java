@@ -36,7 +36,7 @@ public class DumyProductCreator implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 		if(productRepository.findAll().isEmpty()) {
 			
-			final int dumyProductCount = 20;
+			final int dumyProductCount = 5;
 			List<Product> products = new ArrayList<Product>();
 			
 			for (int i=1; i<= dumyProductCount; i++) {

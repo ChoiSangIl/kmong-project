@@ -7,9 +7,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.kmong.project.common.domain.BaseEntity;
+import com.kmong.project.core.api.product.domain.Product;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -29,27 +31,32 @@ public class OrderItem extends BaseEntity{
 	@JsonBackReference
 	Order order;
 	
-	@Column(name="PROD_ID")
-	private Long productId;
+	@OneToOne
+	@JoinColumn(name = "PROD_ID")
+	private Product product;
 	
-	@Column(name="ORDR_PRC")
-	private int price;
+	@Column(name="ORDR_PROD_PRC")
+	private int price;	
 	
 	@Column(name="ORDR_QTY")
 	private int quantity;
 	
-	public OrderItem(Long productId, Order order, int price, int quantity) {
-		this.productId = productId;
+	public OrderItem(Product product, Order order, int unitPrice, int orderQuantity) {
+		this.product = product;
 		this.order = order;
-		this.price = price;
-		this.quantity = quantity;
+		this.price = getOrderProductPrice(unitPrice, orderQuantity);
+		this.quantity = orderQuantity;
+	}
+	
+	private int getOrderProductPrice(int productUnitPrice, int orderQuantity) {
+		return productUnitPrice * orderQuantity;
 	}
 	
 	public void setOrder(Order order) {
 		if(this.order != null) {
-			this.order.getOrderProductList().remove(this);
+			this.order.getOrderItems().remove(this);
 		}
 		this.order = order;
-		order.getOrderProductList().add(this);
+		order.getOrderItems().add(this);
 	}
 }

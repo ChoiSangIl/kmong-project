@@ -12,12 +12,16 @@ public class OrderResponse {
 	@Schema(description = "주문금액")
 	private int orderAmount;
 	
-	private OrderResponse(Long orderNumber, int orderAmount) {
+	@Schema(description = "결제금액")
+	private int paymentAmount;
+	
+	private OrderResponse(Long orderNumber, int orderAmount, int paymentAmount) {
 		this.orderNumber = orderNumber;
 		this.orderAmount = orderAmount;
+		this.paymentAmount = paymentAmount;
 	}
 	
-	public static OrderResponse of(Long orderNumber, int orderAmount) {
-		return new OrderResponse(orderNumber, orderAmount);
+	public static OrderResponse of(Long orderNumber1, int orderAmount2, int paymentAmount3) {
+		return new OrderResponse(orderNumber1, orderAmount2, paymentAmount3);
 	}
 }

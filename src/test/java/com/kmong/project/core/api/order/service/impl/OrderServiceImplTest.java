@@ -10,10 +10,12 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.kmong.project.common.exception.BizRuntimeException;
 import com.kmong.project.core.api.auth.domain.Member;
 import com.kmong.project.core.api.auth.domain.type.Email;
 import com.kmong.project.core.api.auth.domain.type.Password;
@@ -21,20 +23,22 @@ import com.kmong.project.core.api.auth.service.MemberService;
 import com.kmong.project.core.api.order.domain.Order;
 import com.kmong.project.core.api.order.domain.OrderRepository;
 import com.kmong.project.core.api.order.dto.request.OrderProductDto;
-import com.kmong.project.core.api.order.dto.request.OrderRequest;
+import com.kmong.project.core.api.order.dto.request.OrderCreateRequest;
 import com.kmong.project.core.api.order.dto.response.OrderResponse;
 import com.kmong.project.core.api.order.dto.type.Bank;
 import com.kmong.project.core.api.order.dto.type.PaymentType;
 import com.kmong.project.core.api.order.service.OrderService;
+import com.kmong.project.core.api.product.domain.ProductRepository;
 
 
 public class OrderServiceImplTest {
 
 	private OrderRepository orderRepository = mock(OrderRepository.class);
+	private ProductRepository productRepository = mock(ProductRepository.class);
 	private MemberService memberService = mock(MemberService.class);
-	private OrderService orderService = new OrderServiceImpl(orderRepository, memberService);
+	private OrderService orderService = new OrderServiceImpl(orderRepository, productRepository, memberService);
 	
-	private OrderRequest orderRequest;
+	private OrderCreateRequest orderRequest;
 	private OrderProductDto orderProductDto;
 	private static final Email email = new Email("test@kmong.co.kr");
 	private static final Password password = new Password("kmongTest!23");
@@ -45,7 +49,7 @@ public class OrderServiceImplTest {
 	}
 
 	public void createOrderRequestDumyData() {
-		orderRequest = new OrderRequest();
+		orderRequest = new OrderCreateRequest();
 		orderProductDto = new OrderProductDto();
 		List<OrderProductDto> orderProducts = new ArrayList<OrderProductDto>();
 		orderProductDto.setProductId(1L);
@@ -57,6 +61,7 @@ public class OrderServiceImplTest {
 		orderRequest.setPaymentType(PaymentType.CARD);
 		orderRequest.setCardNumber("xxxx-xxxx-xxxx-xxx");
 		orderRequest.setProducts(orderProducts);
+		orderRequest.setOrderAmount(10000);
 		orderRequest.setPaymentAmount(10000);
 	}
 	
@@ -65,11 +70,13 @@ public class OrderServiceImplTest {
 	public void orderProcessTest() {
 		//given
 		Order order = Order.from(orderRequest);
+		System.out.println(order);
 		order.setOrderNumber(1L);
 		Member member = new Member(1L, email.getValue(), password.getValue());
 		
 		doReturn(order).when(orderRepository).save(any());
 		doReturn(member).when(memberService).findByMemberFromSecurity();
+		doReturn(true).when(productRepository).existsById(any());
 		
 		//when
 		OrderResponse response = orderService.orderProcess(orderRequest);
@@ -77,8 +84,27 @@ public class OrderServiceImplTest {
 		//then
 		assertAll(
 			()->assertEquals(response.getOrderAmount(), order.getOrderAmount()),
+			()->assertEquals(response.getOrderAmount(), order.getPaymentAmount()),
 			()->assertEquals(response.getOrderNumber(), order.getOrderNumber())
 		);
+	}
+	
+	@Test
+	@DisplayName("주문서를 생성하는데 상품이 존재하지 않으면 오류가 나야 한다.")
+	public void orderProcessErrorTest() {
+		//given
+		Order order = Order.from(orderRequest);
+		order.setOrderNumber(1L);
+		Member member = new Member(1L, email.getValue(), password.getValue());
+		
+		doReturn(order).when(orderRepository).save(any());
+		doReturn(member).when(memberService).findByMemberFromSecurity();
+		doReturn(false).when(productRepository).existsById(any());
+		
+		//when
+		Assertions.assertThrows(BizRuntimeException.class, () -> {
+			orderService.orderProcess(orderRequest);
+	    });
 	}
 
 }

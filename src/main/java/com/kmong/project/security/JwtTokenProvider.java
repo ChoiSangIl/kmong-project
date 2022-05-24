@@ -82,8 +82,6 @@ public class JwtTokenProvider {
 		try {
 			Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
 			String isLogout = (String) redisTemplate.opsForValue().get(token);
-			System.out.println(token);
-			System.out.println("@@@@@@@@@@@@@"+isLogout);
 			if (ObjectUtils.isEmpty(isLogout)) {
 				return true;
 			}else {
