@@ -36,14 +36,14 @@ public class DumyProductCreator implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 		if(productRepository.findAll().isEmpty()) {
 			
-			final int dumyProductCount = 5;
+			final int dumyProductCount = 20;
 			List<Product> products = new ArrayList<Product>();
 			
 			for (int i=1; i<= dumyProductCount; i++) {
 				Product product = Product.builder()
-						.unitPrice((int) (Math.random() * (100000-1000+1)) + 1000)
+						.unitPrice(1000 * ((int)(Math.random() * 10) +1))
 						.productKorName(name + i)
-						.manufacturer(manufacturer)
+						.manufacturer(manufacturer + i)
 						.thumbnailUrl(thumbnailUrl + i + ".jpg")
 						.stock((int) (Math.random() * (10000-100+1)) + 100)
 						.build();

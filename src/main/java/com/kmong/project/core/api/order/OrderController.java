@@ -31,7 +31,13 @@ public class OrderController {
 	}
 
 	@PostMapping("/order")
-	@Operation(summary = "상품 주문", description = "product Id 5번까지 테스트 상품 자동 등록")
+	@Operation(summary = "상품 주문", 
+			description = "실제 상품 데이터와 금액이 일치하지 않으면 예외가 발생 합니다(E008) - 상품조회 api를 통해 정확한 값으로 넣어주세요.<br/> "
+						+ "주문금액보다 결제 금액이 크면 예외가 발생합니다(E007) <br/>"
+						+ "주문금액이 맞지 않으면 예외가 발생합니다(E006) - 상품단가*상품수량=주문금액(orderAmount) <br/>"
+						+ "상품 재고와 프론트에서 들어온 상품명은 체크하지 않습니다"
+						
+	)
 	public OrderCreateResponse order(@RequestBody @Validated OrderCreateRequest orderRequest) {
 		return orderService.orderProcess(orderRequest);
 	}
