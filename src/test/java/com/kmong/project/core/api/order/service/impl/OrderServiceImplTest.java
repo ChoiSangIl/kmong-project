@@ -70,7 +70,6 @@ public class OrderServiceImplTest {
 	public void orderProcessTest() {
 		//given
 		Order order = Order.from(orderRequest);
-		System.out.println(order);
 		order.setOrderNumber(1L);
 		Member member = new Member(1L, email.getValue(), password.getValue());
 		
@@ -106,5 +105,29 @@ public class OrderServiceImplTest {
 			orderService.orderProcess(orderRequest);
 	    });
 	}
-
+	
+	@Test
+	@DisplayName("주문서를 생성하는데 주문금액과 상품상세 주문금액 합계가 맞지 않으면 오류가 나야한다.")
+	public void orderProcessErrorTest2() {
+		//given
+		orderRequest.setOrderAmount(100);
+		
+		//when
+		Assertions.assertThrows(BizRuntimeException.class, () -> {
+			Order.from(orderRequest);
+	    });
+	}
+	
+	@Test
+	@DisplayName("결제금액이 주문금액보다 더 크면 오류가 나야한다.")
+	public void orderProcessErrorTest3() {
+		//given
+		orderRequest.setOrderAmount(100);
+		orderRequest.setPaymentAmount(1000);
+		
+		//when
+		Assertions.assertThrows(BizRuntimeException.class, () -> {
+			Order.from(orderRequest);
+	    });
+	}
 }
