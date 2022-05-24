@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import com.kmong.project.core.api.auth.domain.type.Email;
 
 @DataJpaTest
+@DisplayName("회원 Repository 테스트")
 public class MemberRepositoryTest {
 
 	private static final String email = "dabang@station3.co.kr";

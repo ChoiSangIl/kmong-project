@@ -32,7 +32,7 @@ import com.kmong.project.core.api.order.dto.type.PaymentType;
 import com.kmong.project.core.api.order.service.OrderService;
 import com.kmong.project.core.api.product.domain.ProductRepository;
 
-
+@DisplayName("주문 관련 서비스로직 테스트")
 public class OrderServiceImplTest {
 
 	private OrderRepository orderRepository = mock(OrderRepository.class);

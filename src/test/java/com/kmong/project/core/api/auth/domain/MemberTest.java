@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@DisplayName("Member 객체 테스트")
 public class MemberTest {
 	private Member member;
 	private static final String email = "test@kmong.co.kr";

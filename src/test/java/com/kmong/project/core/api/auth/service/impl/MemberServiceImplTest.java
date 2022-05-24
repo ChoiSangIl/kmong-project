@@ -26,6 +26,7 @@ import com.kmong.project.core.api.auth.dto.response.MemberLoginResponse;
 import com.kmong.project.core.api.auth.service.MemberService;
 import com.kmong.project.security.JwtTokenProvider;
 
+@DisplayName("회원 관련 서비스 로직 테스트")
 public class MemberServiceImplTest {
 	private static final Email email = new Email("test@kmong.co.kr");
 	private static final Password password = new Password("kmongTest!23");

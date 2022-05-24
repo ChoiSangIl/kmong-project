@@ -34,6 +34,7 @@ import com.kmong.project.core.api.auth.service.MemberService;
 @WebMvcTest(controllers = AuthController.class, 
 	excludeFilters = { @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WebSecurityConfigurerAdapter.class}) 
 })
+@DisplayName("인증 API 컨트롤러 테스트")
 public class AuthControllerTest {
 	
 	@Autowired

@@ -23,6 +23,7 @@ import com.kmong.project.core.api.product.domain.Product;
 import com.kmong.project.core.api.product.domain.ProductRepository;
 
 @DataJpaTest
+@DisplayName("주문 Repository Test")
 public class OrderRepositoryTest  {
 	@Autowired
 	OrderRepository orderRepository;

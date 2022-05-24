@@ -41,6 +41,7 @@ import com.kmong.project.core.api.order.service.OrderService;
 @WebMvcTest(controllers = OrderController.class, 
 	excludeFilters = { @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WebSecurityConfigurerAdapter.class}) 
 })
+@DisplayName("주문 API 컨트롤러 테스트")
 public class OrderControllerTest {
 	
 	@Autowired
