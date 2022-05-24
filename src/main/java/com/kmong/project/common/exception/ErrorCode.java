@@ -15,7 +15,8 @@ public enum ErrorCode  {
 	NOT_READABLE("E004", "데이터 형식을 확인해주세요."),
 	INVALID_PRODUCT("E005", "상품 데이터가 존재하지 않습니다."),
 	INVALID_ORDER_AMOUNT("E006", "주문금액이 맞지 않습니다."),
-	INVALID_PAYMENT_AMOUNT("E007", "주문금액보다 결제금액이 더 큽니다.");
+	INVALID_PAYMENT_AMOUNT("E007", "주문금액보다 결제금액이 더 큽니다."),
+	INVALID_PRODUCT_PRICE("E008", "상품 금액 정보가 일치하지 않습니다.");
 
 	private String code;
 	private String message;

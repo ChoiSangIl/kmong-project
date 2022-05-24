@@ -16,6 +16,7 @@ import com.kmong.project.core.api.order.dto.request.OrderListRequest;
 import com.kmong.project.core.api.order.dto.response.OrderCreateResponse;
 import com.kmong.project.core.api.order.dto.response.OrderListResponse;
 import com.kmong.project.core.api.order.service.OrderService;
+import com.kmong.project.core.api.product.domain.Product;
 import com.kmong.project.core.api.product.domain.ProductRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -35,8 +36,14 @@ public class OrderServiceImpl implements OrderService {
 		order.setMember(memberService.findByMemberFromSecurity());
 		order.getOrderItems().forEach(orderItem->{
 			//존재하지 않는 상품이면 오류 처리, (프론트에서 들어온 상품정보가 맞는지 체크하는 부분은 제외)
-			if(!productRepository.existsById(orderItem.getProduct().getId())) {
+			Product product = productRepository.getById(orderItem.getProduct().getId()); 
+			if(product == null) {
 				throw new BizRuntimeException(ErrorCode.INVALID_PRODUCT);	
+			}
+			
+			//실제 상품과 front에서 들어온 상품정보가 다를 경우 오류 처리.
+			if(orderItem.getOrderAmountByProduct() != product.getUnitPrice() * orderItem.getQuantity() ){
+				throw new BizRuntimeException(ErrorCode.INVALID_PRODUCT_PRICE);	
 			}
 		});
 		order = orderRepository.save(order);

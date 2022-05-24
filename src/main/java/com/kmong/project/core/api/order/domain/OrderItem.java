@@ -36,7 +36,7 @@ public class OrderItem extends BaseEntity{
 	private Product product;
 	
 	@Column(name="ORDR_PROD_PRC")
-	private int price;	
+	private int orderAmountByProduct;	
 	
 	@Column(name="ORDR_QTY")
 	private int quantity;
@@ -44,7 +44,7 @@ public class OrderItem extends BaseEntity{
 	public OrderItem(Product product, Order order, int unitPrice, int orderQuantity) {
 		this.product = product;
 		this.order = order;
-		this.price = getOrderProductPrice(unitPrice, orderQuantity);
+		this.orderAmountByProduct = getOrderProductPrice(unitPrice, orderQuantity);
 		this.quantity = orderQuantity;
 	}
 	

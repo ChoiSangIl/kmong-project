@@ -28,7 +28,7 @@ public class OrderListResponse {
 										.productName(item.getProduct().getProductKorName())
 										.unitPrice(item.getProduct().getUnitPrice())
 										.quantity(item.getQuantity())
-										.orderAmountByProduct(item.getPrice())
+										.orderAmountByProduct(item.getOrderAmountByProduct())
 										.build();
 				items.add(orderItem);
 			});

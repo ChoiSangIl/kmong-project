@@ -31,7 +31,7 @@ public class AuthController {
 	}
 
 	@PostMapping
-	@Operation(summary = "회원가입")
+	@Operation(summary = "회원가입", description = "* 리턴 되는 Token값을 상단 Authorize버튼을 클릭하여 넣어주세요. 로그아웃 할때도 해당 값이 필요하니 다른곳에 복사해주세요.")
     @SecurityRequirements(value = {})
 	private MemberCreateResponse create(@RequestBody @Validated MemberCreateRequest memeberCreateRequest) {
 		return memberService.create(memeberCreateRequest);
@@ -45,7 +45,7 @@ public class AuthController {
 	}
 	
 	@PostMapping("/logout")
-	@Operation(summary = "로그아웃")
+	@Operation(summary = "로그아웃", description = "* access 토큰값을 인자값으로 넘겨주세요.")
 	private MemberLogoutResponse logout(@RequestBody @Validated MemberLogoutRequest request) {
 		return memberService.logout(request);
 	}

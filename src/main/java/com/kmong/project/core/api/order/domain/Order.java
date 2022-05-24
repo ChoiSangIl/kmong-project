@@ -77,7 +77,7 @@ public class Order extends BaseEntity{
 			Product product = Product.builder().productId(obj.getProductId()).build();
 			OrderItem orderItem = new OrderItem(product, this, obj.getUnitPrice(), obj.getQuantity());
 			this.addOrderItem(orderItem);
-			this.orderAmount = this.orderAmount + orderItem.getPrice();
+			this.orderAmount = this.orderAmount + orderItem.getOrderAmountByProduct();
 		});
 		
 		//결제금액
@@ -93,6 +93,8 @@ public class Order extends BaseEntity{
 			throw new BizRuntimeException(ErrorCode.INVALID_PAYMENT_AMOUNT);
 		}
 	}
+	
+	
 	
 	public void addOrderItem(OrderItem product) {
 		orderItems.add(product);

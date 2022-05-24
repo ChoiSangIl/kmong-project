@@ -26,7 +26,7 @@ public class ProductController {
 	}
 
 	@GetMapping("/products")
-	@Operation(summary = "상품 조회", description = "테스트상품은 자동 등록됩니다.")
+	@Operation(summary = "상품 조회", description = "* 주문 테스트를 진행할 때, 정확한 상품 가격과 결제금액을 입력해야 합니다. 해당정보를 기록해 주세요.")
 	public ProductSearchResponse search(@Validated ProductSearchRequest request) {
 		return productService.search(request);
 	}

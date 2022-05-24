@@ -30,6 +30,7 @@ import com.kmong.project.core.api.order.dto.response.OrderListResponse;
 import com.kmong.project.core.api.order.dto.type.Bank;
 import com.kmong.project.core.api.order.dto.type.PaymentType;
 import com.kmong.project.core.api.order.service.OrderService;
+import com.kmong.project.core.api.product.domain.Product;
 import com.kmong.project.core.api.product.domain.ProductRepository;
 
 @DisplayName("주문 관련 서비스로직 테스트")
@@ -57,14 +58,14 @@ public class OrderServiceImplTest {
 		orderProductDto.setProductId(1L);
 		orderProductDto.setProductName("테스트상품");
 		orderProductDto.setQuantity(10);
-		orderProductDto.setUnitPrice(1000);
+		orderProductDto.setUnitPrice(10000);
 		orderProducts.add(orderProductDto);
 		orderRequest.setBank(Bank.Seoul);
 		orderRequest.setPaymentType(PaymentType.CARD);
 		orderRequest.setCardNumber("xxxx-xxxx-xxxx-xxx");
 		orderRequest.setProducts(orderProducts);
-		orderRequest.setOrderAmount(10000);
-		orderRequest.setPaymentAmount(10000);
+		orderRequest.setOrderAmount(100000);
+		orderRequest.setPaymentAmount(100000);
 	}
 	
 	@Test
@@ -74,10 +75,13 @@ public class OrderServiceImplTest {
 		Order order = Order.from(orderRequest);
 		order.setOrderNumber(1L);
 		Member member = new Member(1L, email.getValue(), password.getValue());
+		Product product = Product.builder().productId(1L).unitPrice(10000).build();
 		
 		doReturn(order).when(orderRepository).save(any());
 		doReturn(member).when(memberService).findByMemberFromSecurity();
 		doReturn(true).when(productRepository).existsById(any());
+		System.out.println(order.getOrderItems().get(0).getProduct().getUnitPrice());
+		doReturn(product).when(productRepository).getById(any());
 		
 		//when
 		OrderCreateResponse response = orderService.orderProcess(orderRequest);
