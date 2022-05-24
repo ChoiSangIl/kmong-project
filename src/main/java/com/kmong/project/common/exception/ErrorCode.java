@@ -13,10 +13,10 @@ public enum ErrorCode  {
 	AUTH_INVALID("E002", "로그인정보가 만료되었거나, 아이디암호가 일치하지 않습니다."),
 	DUPLICATE_EMAIL("E003", "이미 등록되어있는 이메일입니다."),
 	NOT_READABLE("E004", "데이터 형식을 확인해주세요."),
-	INVALID_PRODUCT("E005", "상품 데이터가 존재하지 않습니다."),
-	INVALID_ORDER_AMOUNT("E006", "주문금액이 맞지 않습니다."),
+	INVALID_PRODUCT("E005", "상품 데이터가 존재하지 않습니다. 20개의 상품이 자동으로 등록됩니다."),
+	INVALID_ORDER_AMOUNT("E006", "주문금액이 맞지 않습니다. 주문금액(orderAmount) = 상품단가(products[0].unitPrice)*수량(products[0).quantity)"),
 	INVALID_PAYMENT_AMOUNT("E007", "주문금액보다 결제금액이 더 큽니다."),
-	INVALID_PRODUCT_PRICE("E008", "상품 금액 정보가 일치하지 않습니다.");
+	INVALID_PRODUCT_PRICE("E008", "상품 금액 정보가 일치하지 않습니다. (실제상품과 금액정보가 다름 - 상품조회 API를 호출하여 해당 데이터로 주문해주세요)");
 
 	private String code;
 	private String message;
