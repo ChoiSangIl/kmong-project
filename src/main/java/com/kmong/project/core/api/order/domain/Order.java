@@ -64,11 +64,6 @@ public class Order extends BaseEntity{
 	@Version
 	private long version;
 	
-	public Order(int orderAmount, OrderStatus status) {
-		this.orderAmount = orderAmount;
-		this.status = status;
-	}
-	
 	private Order(OrderCreateRequest orderRequest) {
 		this.status = OrderStatus.PAYMENT_READY;
 		
@@ -80,7 +75,7 @@ public class Order extends BaseEntity{
 			this.orderAmount = this.orderAmount + orderItem.getOrderAmountByProduct();
 		});
 		
-		//결제금액
+		//결제금액 셋팅
 		this.paymentAmount = orderRequest.getPaymentAmount();
 		
 		//front에서 들어온 주문상품의 금액이 다를 경우 오류 처리
@@ -93,8 +88,6 @@ public class Order extends BaseEntity{
 			throw new BizRuntimeException(ErrorCode.INVALID_PAYMENT_AMOUNT);
 		}
 	}
-	
-	
 	
 	public void addOrderItem(OrderItem product) {
 		orderItems.add(product);
@@ -109,10 +102,16 @@ public class Order extends BaseEntity{
 		return new Order(orderRequest);
 	}
 	
-	/**
-	 * test function
-	 */
+	
+	//test function...
 	public void setOrderNumber(long orderNumber) {
 		this.orderNumber = orderNumber;
 	}
+	
+	//test function...
+	public Order(int orderAmount, OrderStatus status) {
+		this.orderAmount = orderAmount;
+		this.status = status;
+	}
+	
 }

@@ -35,7 +35,7 @@ public class OrderServiceImpl implements OrderService {
 		Order order = Order.from(orderRequest);
 		order.setMember(memberService.findByMemberFromSecurity());
 		order.getOrderItems().forEach(orderItem->{
-			//존재하지 않는 상품이면 오류 처리, (프론트에서 들어온 상품정보가 맞는지 체크하는 부분은 제외)
+			//존재하지 않는 상품이면 오류 처리
 			Product product = productRepository.getById(orderItem.getProduct().getId()); 
 			if(product == null) {
 				throw new BizRuntimeException(ErrorCode.INVALID_PRODUCT);	

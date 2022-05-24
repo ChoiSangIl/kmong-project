@@ -36,7 +36,7 @@ public class OrderItem extends BaseEntity{
 	private Product product;
 	
 	@Column(name="ORDR_PROD_PRC")
-	private int orderAmountByProduct;	
+	private int orderAmountByProduct;	//상품별 주문 금액 : 단가*주문수량
 	
 	@Column(name="ORDR_QTY")
 	private int quantity;

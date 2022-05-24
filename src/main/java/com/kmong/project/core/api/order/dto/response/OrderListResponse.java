@@ -42,6 +42,7 @@ public class OrderListResponse {
 								.build();
 			
 			this.orderList.add(orderDto);
+			//총 주문, 결제 금액을 구한다.
 			this.totalOrderAmount = this.totalOrderAmount + order.getOrderAmount();
 			this.totalPaymentAmount = this.totalPaymentAmount + order.getPaymentAmount();
 		});
